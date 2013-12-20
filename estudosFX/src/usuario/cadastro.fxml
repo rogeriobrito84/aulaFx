@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="225.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="usuario.ControleUsuario">
+<children><TextField fx:id="fieldId" layoutX="91.0" layoutY="8.0" prefHeight="23.0" prefWidth="68.0" visible="false" /><Label layoutX="20.0" layoutY="10.0" text="Nome" /><TextField fx:id="fieldNome" layoutX="20.0" layoutY="30.0" prefWidth="300.0" promptText="Digite seu nome" /><Label layoutX="20.0" layoutY="60.0" text="Email" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><TextField fx:id="fieldEmail" layoutX="20.0" layoutY="80.0" prefWidth="300.0" promptText="Digite seu email" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><Label layoutX="20.0" layoutY="110.0" text="Data de nascimento" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><TextField fx:id="fieldData" layoutX="20.0" layoutY="130.0" prefHeight="23.0" prefWidth="145.0" promptText="Digite a data de Nascimento" /><Button fx:id="btnSalvar" layoutX="20.0" layoutY="165.0" mnemonicParsing="false" onAction="#salvar" prefHeight="50.0" prefWidth="145.0" text="salvar" /><Button layoutX="175.0" layoutY="165.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="50.0" prefWidth="145.0" text="cancelar" />
+</children></AnchorPane>

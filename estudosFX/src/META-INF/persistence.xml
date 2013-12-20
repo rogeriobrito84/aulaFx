@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="estudosFX">
+		<class>usuario.Usuario</class>
+		<class>org.persistence.Entity2</class>
+		
+		<shared-cache-mode>NONE</shared-cache-mode>
+		<properties>
+			<property name="eclipselink.logging.level" value="WARNING" />
+			<property name="eclipselink.cache.shared.default" value="false" />
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:h2:file:banco/aula;AUTO_SERVER=TRUE" />
+			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
+			<property name="javax.persistence.jdbc.user" value="roger" />
+			<property name="javax.persistence.jdbc.password" value="12345" />
+			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />
+			<property name="javax.persistence.jdbc.show_sql" value="true" />
+			<property name="eclipselink.dll-generation.output-mode" value="database" />
+			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+<!-- 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />  -->
+		</properties>
+	</persistence-unit>
+</persistence>

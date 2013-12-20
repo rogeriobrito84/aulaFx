@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="usuario.ControleUsuario">
+<children><TableView fx:id="tvUsuarios" layoutX="10.0" prefHeight="310.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml" /><Button fx:id="btnNovo" layoutX="10.0" layoutY="320.0" mnemonicParsing="false" onAction="#addNovo" prefHeight="50.0" prefWidth="160.0" text="Novo" /><Button layoutX="180.0" layoutY="320.0" mnemonicParsing="false" onAction="#editarUsuario" prefHeight="50.0" prefWidth="160.0" text="Editar" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" /><Button layoutX="350.0" layoutY="320.0" mnemonicParsing="false" onAction="#excluir" prefHeight="50.0" prefWidth="160.0" text="Excluir" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+</children></AnchorPane>
