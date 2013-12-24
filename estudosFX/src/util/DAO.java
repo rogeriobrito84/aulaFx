@@ -52,7 +52,7 @@ public class DAO {
 	/**
 	 * Instância do logger
 	 */
-	private static Logger logger = LoggerFactory.getLogger(DAO.class.getName());
+	//private static Logger logger = LoggerFactory.getLogger(DAO.class.getName());
 	
 	/**
 	 * Instância do entity manager
@@ -83,12 +83,13 @@ public class DAO {
 	private static String senhaH2 = "12345";
 	/**
 	 * Construtor padrão responsável por inicializar a fábrica criado de Entity Managers.
+	 * @throws Exception 
 	 */
-	public DAO() {
+	public DAO() throws Exception {
 		try {
 			createFactory();
 		} catch (Exception e) {
-			getLogger().error("Erro acessando a base relacional!", e);
+			throw new Exception("Erro acessando a base relacional!" + e.getMessage());
 		}
 		
 		this.entityManager = this.emf.createEntityManager();		
@@ -99,26 +100,27 @@ public class DAO {
 	/**
 	 * Retorna referência para o objeto de Log da biblioteca.
 	 */
-	protected static Logger getLogger() {
-		if(logger == null) {
-			logger = LoggerFactory.getLogger(DAO.class);
-		}
-		return logger;
-	}
+//	protected static Logger getLogger() {
+//		if(logger == null) {
+//			logger = LoggerFactory.getLogger(DAO.class);
+//		}
+//		return logger;
+//	}
 	
 	/**
 	 * Método que fornece acesso ao Entity Manager relacionado ao DAO.
 	 * Este método verificar se o Entity Manager está fechado ou nulo
 	 * e, nessas situações, encarrega-se de solicitar uma nova instância
 	 * ao EntityManagerFactory.
+	 * @throws Exception 
 	 */
-	protected EntityManager getEntityManager() {
+	protected EntityManager getEntityManager() throws Exception {
 		if(this.entityManager == null || !this.entityManager.isOpen()) {
 			this.entityManager = null;
 			try {
 				createFactory();
 			} catch (Exception e) {
-				logger.error("Erro acessando a base relacional!", e);
+				throw new Exception("Erro no getEntityManager()" + e.getMessage());
 			}
 			this.entityManager = this.emf.createEntityManager();
 		}
@@ -130,8 +132,9 @@ public class DAO {
 	 * 
 	 * @return	<code>true</code> caso processo de shutdown ocorra 
 	 * 			com sucesso, <code>false</code> em caso contrário.
+	 * @throws Exception 
 	 */
-	public  boolean shutdown() {
+	public  boolean shutdown() throws Exception {
 		boolean result = false;
 		Connection connection = null;
 		try {
@@ -139,7 +142,7 @@ public class DAO {
 			connection.createStatement().execute("SHUTDOWN");
 			result = true;
 		} catch (SQLException e) {
-			getLogger().debug("Erro ao executar SHUTDOWN do banco de dados!",e);
+			throw new Exception("Erro ao executar SHUTDOWN do banco de dados!" + e.getMessage());
 		} finally {
 			closeConnection(connection);
 		}
@@ -161,8 +164,8 @@ public class DAO {
 			connection = getInternalConnection();
 			result = true;
 		} catch (SQLException e) {
-			getLogger().debug("Erro ao conectar ao banco de dados!",e);
-			throw new Exception(e);
+			throw new Exception("Erro ao conectar ao banco de dados!" + e.getMessage());
+			
 		} finally {
 			closeConnection(connection);
 		}
@@ -182,8 +185,8 @@ public class DAO {
 			FullTextLucene.init(connection);
 			result = true;
 		} catch (Exception e) {
-			getLogger().error("Erro iniciando índices!", e);
 			result = false;
+			throw new Exception("Erro iniciando índices!" + e.getMessage());
 		} finally{
 			if(connection != null) {
 				connection.close();
@@ -194,14 +197,15 @@ public class DAO {
 	/**
 	 * Cria uma Sessão caso a da classe esteja nula.
 	 * @return Session
+	 * @throws Exception 
 	 */
-	public Session getSession(){
+	public Session getSession() throws Exception{
 		if(this.sessao == null) {
 			try {
 				EntityManager em = getEntityManager();
 				this.sessao = em.unwrap(Session.class);
 			} catch (Exception e) {
-				getLogger().debug("Erro na recuperação da sessão da conexão", e);
+				throw new Exception("Erro na recuperação da sessão da conexão!" + e.getMessage());
 			}
 		}
 		return this.sessao;
@@ -212,8 +216,9 @@ public class DAO {
 	 * para uso interno no DAO.
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private  Connection getInternalConnection() throws SQLException {
+	private  Connection getInternalConnection() throws Exception {
 		Session sessao = getSession();
 
 		if ((sessao == null) || (sessao.getLogin() == null)) {
@@ -245,15 +250,12 @@ public class DAO {
 	
 	/**
 	 * Obtém a conexão com o banco de dados a partir da sessão do Entity Manager.
+	 * @throws Exception 
 	 */
-	public Connection getConnection() throws SQLException {
+	public Connection getConnection() throws Exception {
 		Session sessao = getSession();
-		
-		/**
-		 * Tratamento para executar script SQL via JDBC utilizando as configurações do persitence.xml
-		 */
-		
-		return connectionPool.getConnection();
+		JdbcConnectionPool pool = getPoolConnection(sessao);
+		return pool.getConnection();
 	}	
 	
 	/**
@@ -261,13 +263,14 @@ public class DAO {
 	 * 
 	 * @param connection
 	 * 		Referência à conexão que terá os recursos liberados no banco de dados.
+	 * @throws Exception 
 	 */
-	private static void closeConnection(Connection connection) {
+	private static void closeConnection(Connection connection) throws Exception {
 		if(connection != null) {
 			try {
 				connection.close();
 			} catch (SQLException sqle) {
-				getLogger().error("Erro na finalização da conexão", sqle);
+				throw new Exception("Erro na finalização da conexão!" + sqle.getMessage());
 			}
 		}
 	}	
@@ -278,8 +281,9 @@ public class DAO {
 	 * 
 	 * @param scriptFile
 	 * 		Referência ao <code>File>/code> que indica localização física do arquivo de script.
+	 * @throws Exception 
 	 */
-	public void executeScriptSQLFromFileSystem(File scriptFile) {
+	public void executeScriptSQLFromFileSystem(File scriptFile) throws Exception {
 		BufferedReader br = null;
 		FileReader is = null;
 		try {
@@ -287,7 +291,7 @@ public class DAO {
 			br = new BufferedReader(is);
 			this.processaScript(br);
 		} catch (Exception e) {
-			getLogger().error("Erro na criação da base de dados", e);
+			throw new Exception("Erro na criação da base de dados!" + e.getMessage());
 		} finally {
 			try {
 				if(br != null) {
@@ -308,8 +312,9 @@ public class DAO {
 	 * 
 	 * @param scriptFile
 	 * 			String que indica nome do arquivo configurado como resource	da lib.
+	 * @throws Exception 
 	 */
-	public void executeScriptSQLFromResource(String scriptFile) {
+	public void executeScriptSQLFromResource(String scriptFile) throws Exception {
 		BufferedReader br = null;
 		InputStreamReader is = null;
 		
@@ -318,7 +323,7 @@ public class DAO {
 			br = new BufferedReader(is);
 			this.processaScript(br);
 		} catch (Exception e) {
-			getLogger().error("Erro na criação da base de dados", e);
+			throw new Exception("Erro na criação da base de dados!" + e.getMessage());
 		} finally {
 			try {
 				if(br != null) {
@@ -343,8 +348,9 @@ public class DAO {
 	 * @param br
 	 * 			Referência ao imputstrean que representa o arquivo a ser lido para
 	 * 			execução dos comandos SQL.
+	 * @throws Exception 
 	 */
-	private void processaScript(BufferedReader br) {
+	private void processaScript(BufferedReader br) throws Exception {
 		try {
 			String registro = "";
 			String comando  = "";
@@ -355,13 +361,12 @@ public class DAO {
 				}
 				
 				if (comando !=null && comando.trim().endsWith(";")) {
-					getLogger().debug("Executando DDL: " + comando);
 					this.executeInternalSQL(comando);
 					comando = "";
 				}
 			}
 		} catch (Exception e) {
-			getLogger().error("Erro na criação da base de dados", e);
+			throw new Exception("Erro no método processaScript!" + e.getMessage());
 		}
 	}
 	
@@ -371,8 +376,9 @@ public class DAO {
 	 * sem impedir continuidade do processsamento.
 	 * 
 	 * @param comando
+	 * @throws Exception 
 	 */
-	private void executeInternalSQL(String comando) {
+	private void executeInternalSQL(String comando) throws Exception {
 		Connection conn = null;
 		try {
 			conn = getConnection();
@@ -380,7 +386,7 @@ public class DAO {
 				conn.createStatement().execute(comando);
 			}
 		} catch(SQLException sqle) {
-			logger.debug("Comando com erro - " + comando + " - " + sqle);
+			throw new Exception("Erro iniciando índices!" + "  comando: "+ comando + " "+ sqle.getMessage());
 		} finally {
 			closeConnection(conn);			
 		}		
@@ -434,10 +440,11 @@ public class DAO {
 	public void beginTransaction() throws Exception {
 		try {
 			EntityManager em = getEntityManager();
-			em.getTransaction().begin();
+			if(!isTransactionActive()){
+				em.getTransaction().begin();
+			}
 		} catch (Exception e) {
-			logger.error("Erro abrindo transação!", e);
-			throw new Exception(e);
+			throw new Exception("Erro ao iniciar Transação!" + e.getMessage());
 		}
 	}
 	
@@ -453,8 +460,8 @@ public class DAO {
 				result = entityManager.getTransaction() != null && entityManager.getTransaction().isActive(); 
 			}
 		} catch (Exception e) {
-			getLogger().error("Erro verificando status da transação!", e);
 			result = false;
+			throw new Exception("Erro ao verificar status da transaçõa!" + e.getMessage());
 		}
 		return result;
 	}
@@ -466,10 +473,11 @@ public class DAO {
 	public void commitTransaction() throws Exception {
 		try {
 			EntityManager em = getEntityManager();
-			em.getTransaction().commit();
+			if(isTransactionActive()){
+				em.getTransaction().commit();
+			}
 		} catch (Exception e) {
-			getLogger().error("Erro efentuando commit da transação!", e);
-			throw new Exception(e);
+			throw new Exception("Erro ao efetuar commit na transação!" + e.getMessage());
 		}
 	}	
 	
@@ -482,8 +490,7 @@ public class DAO {
 			EntityManager em = getEntityManager();
 			em.getTransaction().rollback();
 		} catch (Exception e) {
-			getLogger().error("Erro efentuando rollback da transação!", e);
-			throw new Exception(e);
+			throw new Exception("Erro ao efetuar rollback na transação!" + e.getMessage());
 		}
 	}
 	
@@ -500,8 +507,7 @@ public class DAO {
 			}
 			this.entityManager = emf.createEntityManager();
 		} catch (Exception e) {
-			getLogger().error("Erro fechando o EntityManager!", e);
-			throw e;
+			throw new Exception("Erro ao criar EntityManagerFactory!" + e.getMessage());
 		}
 	}
 	
@@ -517,8 +523,7 @@ public class DAO {
 				this.entityManager = null;
 			}
 		} catch (Exception e) {
-			getLogger().error("Erro fechando o EntityManager!", e);
-			throw e;
+			throw new Exception("Erro ao fechar o EntityManager" + e.getMessage());
 		}
 	}	
 	
@@ -537,8 +542,8 @@ public class DAO {
 			jdbcDataSource = null;
 			connectionPool = null;
 		} catch (Exception e) {
-			getLogger().error("Erro fechando o EntityManager!", e);
-			throw e;
+			throw new Exception("Erro fechando o EntityManagerFactory!" + e.getMessage());
+			
 		}
 	}	
 	

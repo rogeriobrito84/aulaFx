@@ -1,10 +1,22 @@
 package main;
 
-import java.awt.Event;
+
+import java.awt.event.MouseAdapter;
 import java.io.IOException;
 
+import javax.swing.plaf.basic.BasicTabbedPaneUI.MouseHandler;
+import javax.xml.ws.handler.Handler;
+
+import com.sun.prism.impl.Disposer.Target;
+
+
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,6 +41,11 @@ public class MainControle {
 		
 		
 	}
+	
+	public void pressBtn(ActionEvent e){
+		
+	}
+	
 	
 	
 }

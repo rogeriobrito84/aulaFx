@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainControle">
+<AnchorPane id="principal" fx:id="" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainControle">
 <children><MenuBar prefHeight="24.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml">
   <menus>
     <Menu mnemonicParsing="false" onAction="#listarUsuarios" text="Cadastros">
@@ -13,5 +13,5 @@
       </items>
     </Menu>
   </menus>
-</MenuBar>
+</MenuBar><Button layoutX="126.959228515625" layoutY="208.5" mnemonicParsing="false" onAction="#pressBtn" text="0" /><Button layoutX="210.959228515625" layoutY="208.5" mnemonicParsing="false" onAction="#pressBtn" text="1" />
 </children></AnchorPane>

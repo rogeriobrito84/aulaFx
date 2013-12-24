@@ -22,8 +22,9 @@ public class DAOGenerico<T, ID extends Serializable> extends DAO {
 	/**
 	 * Construtor privado
 	 * Inicializa a estrutura básica do JPA
+	 * @throws Exception 
 	 */
-	public DAOGenerico(Class<T> classe) {
+	public DAOGenerico(Class<T> classe) throws Exception {
 		super();
 		this.persistentClass = classe;
 	}
@@ -41,8 +42,7 @@ public class DAOGenerico<T, ID extends Serializable> extends DAO {
 		} catch (EntityExistsException e) {
 			throw new Exception(e);
 		} catch (Exception e) {
-			getLogger().error("Erro persistindo objeto: "+ persistentClass.getSimpleName() + "", e);
-			throw e;
+			throw new Exception("Erro ao persistir o objeto: " + persistentClass.getSimpleName() + e.getMessage());
 		}
 	}
 	/**
@@ -59,8 +59,7 @@ public class DAOGenerico<T, ID extends Serializable> extends DAO {
 //			}
 			return result;
 		} catch (Exception e) {
-			getLogger().error("Erro efentuando consulta!", e);
-			throw e;
+			throw new Exception("Erro ao efetuar consulta do objeto: " + persistentClass.getSimpleName() + e.getMessage());
 		} 
 	}
 	
@@ -86,8 +85,7 @@ public class DAOGenerico<T, ID extends Serializable> extends DAO {
 			
 			return result;
 		} catch (Exception e) {
-			getLogger().error("Erro efentuando consulta!", e);
-			throw e;
+			throw new Exception("Erro ao efetuar consulta do objeto: " + persistentClass.getSimpleName() + e.getMessage());
 		}
 	}
 	
@@ -115,8 +113,7 @@ public class DAOGenerico<T, ID extends Serializable> extends DAO {
 //			}
 			return result; 
 		} catch (Exception e) {
-			getLogger().error("Erro efentuando consulta!", e);
-			throw e;
+			throw new Exception("Erro ao efetuar consulta do objeto: " + persistentClass.getSimpleName() + e.getMessage());
 		}
 	}
 	
@@ -130,8 +127,7 @@ public class DAOGenerico<T, ID extends Serializable> extends DAO {
 		try {
 			getEntityManager().remove(object);
 		} catch (Exception e) {
-			getLogger().error("Erro ao removendo objeto!", e);
-			throw e;
+			throw new Exception("Erro ao remover o objeto: " + persistentClass.getSimpleName() + e.getMessage());
 		}
 	}
 
@@ -139,8 +135,7 @@ public class DAOGenerico<T, ID extends Serializable> extends DAO {
 		try {
 			getEntityManager().merge(object);
 		} catch (Exception e) {
-			getLogger().error("Erro no merge objeto!", e);
-			throw e;
+			throw new Exception("Erro ao efetuar merger no objeto: " + persistentClass.getSimpleName() + e.getMessage());
 		}
 	}
 

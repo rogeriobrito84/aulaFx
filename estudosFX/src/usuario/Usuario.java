@@ -24,7 +24,7 @@ public class Usuario {
 	private String nome;
 	@Column
 	private String email;
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataNascimento;
 	
 	public int getId() {
@@ -45,26 +45,15 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	public String getDataNascimento(){
-		String data = "";
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
-		data = sdf.format(dataNascimento);
-		return data;
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 	
-	public void setDataNascimento(String dataNascimento) throws ParseException{
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
-		Calendar data = Calendar.getInstance();
-		
-		if((dataNascimento != null) & !dataNascimento.trim().isEmpty()){
-			this.dataNascimento = sdf.parse(dataNascimento);
-		}else{
-			this.dataNascimento = (Date) data.getTime();
-		}
-		
-	}
 	
+
 	
 	
 	
